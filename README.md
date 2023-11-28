@@ -1,3 +1,5 @@
+# semester-project
+
 # Remote Heart Rate Detection through Eulerian Magnification of Face Videos
 
 An implementation of the Eulerian video magnification computer vision algorithm initially developed by MIT CSAIL. This program uses the method for the application of remotely detecting an individual's heart rate in beats per minute from a still video of their face.
@@ -14,8 +16,10 @@ files are described below:
 - heartrate.py - Contains function to calculate heart rate from FFT results
 
 ## How to run:
-To run the program, specify the path to the input video in the preprocessing.read_video() function on line 13 of
-main.py. To alter the frequency range to be filtered, change the values assigned to freq_min and freq_max on lines 8
-and 9.
-# semester-project
-# semester-project
+To run the program, specify the path to the input video in the preprocessing.read_video() function on line 13 of main.py.
+To alter the frequency range to be filtered, change the values assigned to freq_min and freq_max on lines 8 and 9.
+
+## Packages
+If you get an error regarding packages, run the following command in your environment
+
+`pip install -r requirements.txt`
