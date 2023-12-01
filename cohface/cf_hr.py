@@ -2,7 +2,7 @@ import h5py
 import numpy as np
 from scipy.signal import find_peaks
 
-def real_heartrate(hdf5_file):
+def get_heart_rate(hdf5_file):
     #hdf5_file = 'data.hdf5'
 
     datasets_names = ['pulse','time']
