@@ -43,18 +43,26 @@ db_path = '../cohface/cohface/'
 
 values = [[],[],[],[]]
 
-with open(db_path+'protocols/all/all.txt', 'r') as file:
+with open(db_path+'protocols/all/1.txt', 'r') as file:
     # Iterate over each line in the file
     for line in file:
+        
         # Process each line as needed
         file_path = db_path+line.strip()
-        gt,est=eval_data(file_path)
-        diff=gt-est
-        
-        print(gt,est,diff)
-        values[0].append(file_path)
-        values[1].append(gt)
-        values[2].append(est)
-        values[3].append(diff)
+        try:
+            gt,est=eval_data(file_path)
+            diff=gt-est
+        except Exception as e:
+            print("Error with sample: "+file_path)
+            values[0].append(file_path)
+            values[1].append("Error")
+            values[2].append("Error")
+            values[3].append("Error")
+        else:
+            print(gt,est,diff)
+            values[0].append(file_path)
+            values[1].append(gt)
+            values[2].append(est)
+            values[3].append(diff)
     
     write_excel_file(values[0],values[1],values[2],values[3])
