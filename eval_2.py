@@ -23,21 +23,20 @@ def eval_data(data_path):
 
 db_path = '../cohface/cohface/'
 
-hues = []
+estimations = []
 
 target_hr = 65
 
 files_paths = []
 
-with open(db_path+'protocols/all/13.txt', 'r') as file:
+with open(db_path+'protocols/all/all.txt', 'r') as file:
     for line in file:
         # Process each line as needed
         files_paths.append(db_path+line.strip()) 
 
 
 for hue in [1.7222]:#list(np.linspace(1.5, 2.5, 10))
-    index = len(hues)
-    hues.append([hue,[]])
+
     #print(hue)
     # Iterate over each line in the file
     for file_path in files_paths:
@@ -59,7 +58,8 @@ for hue in [1.7222]:#list(np.linspace(1.5, 2.5, 10))
             print(f"Error with sample: {file_path}\nError: {str(e)}")
         else:
             print(file_path,hue,esth)
-            hues[index][1].append(esth)
+            estimations.append([file_path,esth])
+            #hues[index][1].append(esth)
 
 def find_next_filename(base_filename):
     i = 1
@@ -72,17 +72,11 @@ def write_excel_file():
     workbook = openpyxl.Workbook()
     sheet = workbook.active
 
-    sheet.cell(row=1, column=1, value="hue")
-    sheet.cell(row=1, column=2, value="1/0")
-    sheet.cell(row=1, column=3, value="1/1")
-    sheet.cell(row=1, column=4, value="1/2")
-    sheet.cell(row=1, column=5, value="1/3")
-    for i in range(len(hues)):
-        sheet.cell(row=i+2, column=1, value=hues[i][0])
-        sheet.cell(row=i+2, column=2, value=hues[i][1][0])
-        sheet.cell(row=i+2, column=3, value=hues[i][1][1])
-        sheet.cell(row=i+2, column=4, value=hues[i][1][2])
-        sheet.cell(row=i+2, column=5, value=hues[i][1][3])
+    sheet.cell(row=1, column=1, value="sample")
+    sheet.cell(row=1, column=2, value="est")
+    for i in range(len(estimations)):
+        sheet.cell(row=i+2, column=1, value=estimations[i][0])
+        sheet.cell(row=i+2, column=2, value=estimations[i][1])
 
     # Save the workbook to a file
     workbook.save(find_next_filename("output"))
