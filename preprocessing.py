@@ -5,7 +5,7 @@ import time
 import pickle
 import gzip
 
-faceCascade = cv2.CascadeClassifier("haarcascades/haarcascade_frontalface_alt0.xml")
+faceCascade = cv2.CascadeClassifier("haarcascades/haarcascade_frontalface_default.xml")
 
 
 def export_frames(video_path, video_frames):
@@ -60,14 +60,14 @@ def read_video(video_path):
         roi_frame = img
 
         # Detect face
-        face_rects = faceCascade.detectMultiScale(gray, 1.3, 5)
+        face_rects = faceCascade.detectMultiScale(gray, 1.1, 4)
 
         # Select ROI
         if len(face_rects) > 0:
             for (x, y, w, h) in face_rects:
                 roi_frame = img[y:y + h, x:x + w]
             if roi_frame.size != img.size:
-                roi_frame = cv2.resize(roi_frame, (500, 500))
+                roi_frame = cv2.resize(roi_frame, (36, 36))
                 frame = np.ndarray(shape=roi_frame.shape, dtype="float")
                 frame[:] = roi_frame * (1. / 255)
                 video_frames.append(frame)

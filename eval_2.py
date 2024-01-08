@@ -16,12 +16,12 @@ gtdatapath = ''
 def eval_data(data_path):
     #data_path should be equal to the path of the folder containing data.avi and data.hdf5
     
-    ground_truth_hr = cf_hr.get_heart_rate(gtdatapath)
-    eulerian_magnification_hr = em_hr.get_heart_rate(data_path+'.avi')
+    ground_truth_hr = 123#cf_hr.get_heart_rate(gtdatapath)
+    eulerian_magnification_hr = em_hr.get_heart_rate(data_path+'.mp4')
     
     return ground_truth_hr,eulerian_magnification_hr
 
-db_path = '../cohface/cohface/'
+db_path = '../ff++/'
 
 estimations = []
 
@@ -29,13 +29,13 @@ target_hr = 65
 
 files_paths = []
 
-with open(db_path+'protocols/all/all.txt', 'r') as file:
+with open(db_path+'protocols/all.txt', 'r') as file:
     for line in file:
         # Process each line as needed
         files_paths.append(db_path+line.strip()) 
 
-
-for hue in [1.7222]:#list(np.linspace(1.5, 2.5, 10))
+hue = 1.7222
+for hr in [90, 65, 120]:#list(np.linspace(1.5, 2.5, 10))
 
     #print(hue)
     # Iterate over each line in the file
@@ -45,20 +45,20 @@ for hue in [1.7222]:#list(np.linspace(1.5, 2.5, 10))
                 gtdatapath=file_path+'.hdf5'
             
             #create injected video
-            inject_hr.inject_heart_rate(file_path+'.avi', file_path+'_hacked'+str(hue)+'.avi', target_hr, hue)
+            inject_hr.inject_heart_rate(file_path+'.mp4', file_path+'_hacked'+str(hr)+'.mp4', hr, hue)
             
             #print("gtdatapath",gtdatapath,'|'+file_path[-1:]+'|')
             #gt,est=eval_data(file_path)
             #TODO remove when done skipping original videos
             gt,est=123,456
-            gth,esth=eval_data(file_path+'_hacked'+str(hue))
-            gth=target_hr
+            gth,esth=eval_data(file_path+'_hacked'+str(hr))
+            gth=hr
             diff=gt-est
         except Exception as e:
             print(f"Error with sample: {file_path}\nError: {str(e)}")
         else:
-            print(file_path,hue,esth)
-            estimations.append([file_path,esth])
+            print(file_path,hr,esth,est)
+            #estimations.append([file_path,esth])
             #hues[index][1].append(esth)
 
 def find_next_filename(base_filename):
@@ -83,4 +83,4 @@ def write_excel_file():
 
 #print(hues)
 
-write_excel_file()
+#write_excel_file()

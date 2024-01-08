@@ -21,7 +21,7 @@ def eval_data(data_path):
     
     return ground_truth_hr,eulerian_magnification_hr
 
-db_path = '../cohface/cohface/'
+db_path = '../cohface/'
 
 hues = []
 
@@ -34,8 +34,8 @@ with open(db_path+'protocols/all/13.txt', 'r') as file:
         # Process each line as needed
         files_paths.append(db_path+line.strip()) 
 
-
-for hue in [1.7222]:#list(np.linspace(1.5, 2.5, 10))
+hue = 1.7222
+for hr in [65, 90, 100, 120]:#list(np.linspace(1.5, 2.5, 10))
     index = len(hues)
     hues.append([hue,[]])
     #print(hue)
@@ -46,14 +46,14 @@ for hue in [1.7222]:#list(np.linspace(1.5, 2.5, 10))
                 gtdatapath=file_path+'.hdf5'
             
             #create injected video
-            inject_hr.inject_heart_rate(file_path+'.avi', file_path+'_hacked'+str(hue)+'.avi', target_hr, hue)
+            inject_hr.inject_heart_rate(file_path+'.avi', file_path+'_hacked'+str(hr)+'.avi', hr, hue)
             
             #print("gtdatapath",gtdatapath,'|'+file_path[-1:]+'|')
             #gt,est=eval_data(file_path)
             #TODO remove when done skipping original videos
             gt,est=123,456
-            gth,esth=eval_data(file_path+'_hacked'+str(hue))
-            gth=target_hr
+            gth,esth=eval_data(file_path+'_hacked'+str(hr))
+            gth=hr
             diff=gt-est
         except Exception as e:
             print(f"Error with sample: {file_path}\nError: {str(e)}")
