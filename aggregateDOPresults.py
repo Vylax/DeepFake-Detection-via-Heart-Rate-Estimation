@@ -21,7 +21,7 @@ video_names = []
 video_scores = defaultdict(list)
 
 # Read the input file
-with open('deepfake_scores.txt1708900', 'r') as file:
+with open('deepfake_scores.txt2549651', 'r') as file:
     for line in file:
         if "img;score" in line:
             continue

@@ -38,16 +38,18 @@ def inject_heart_rate(video_path, output_path, target_heart_rate, amplitude_fact
 
     face_cascade = cv2.CascadeClassifier("haarcascades/haarcascade_frontalface_default.xml")
 
-    temp = True
+    temp = False
 
     for i in range(frame_count):
         ret, frame = cap.read()
         if not ret:
             break
 
-        #if(temp):
-        #    print("luminance",calculate_luminance(frame)/255.0)
-        #    temp = False
+        if(temp):
+            luminance = calculate_luminance(frame)/255.0
+            print("luminance",luminance)
+            sinusoidal_signal = sinusoidal_signal = (0.02+0.1 * (0.45-luminance)) * np.sin(2 * np.pi * target_heart_rate / 60 * t)
+            temp = False
 
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         face_rects = face_cascade.detectMultiScale(gray_frame, 1.1, 4)

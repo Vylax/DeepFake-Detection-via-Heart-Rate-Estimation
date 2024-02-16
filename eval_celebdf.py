@@ -9,59 +9,52 @@ import em_hr
 import openpyxl
 import os
 
-import inject_hr
+import inject_hr3
+import time
 
-gtdatapath = ''
+start_time = time.time()
 
 def eval_data(data_path):
-    #data_path should be equal to the path of the folder containing data.avi and data.hdf5
+    eulerian_magnification_hr = em_hr.get_heart_rate(data_path+file_ext)
     
-    ground_truth_hr = cf_hr.get_heart_rate(gtdatapath)
-    eulerian_magnification_hr = em_hr.get_heart_rate(data_path+'.avi')
-    
-    return ground_truth_hr,eulerian_magnification_hr
+    return 333,eulerian_magnification_hr
 
-db_path = '../cohface/cohface/'
+db_path = '../'
 
-hues = []
 estimations = []
-
-target_hr = 65
 
 files_paths = []
 
-with open(db_path+'protocols/all/all.txt', 'r') as file:
+file_ext = '.mp4'
+
+with open(db_path+'selection.txt', 'r') as file:
     for line in file:
         # Process each line as needed
         files_paths.append(db_path+line.strip()) 
 
 hue = 1.7222
-for hr in [65, 90, 100, 120]:#list(np.linspace(1.5, 2.5, 10))
-    index = len(hues)
-    hues.append([hue,[]])
-    #print(hue)
+for hr in [65, 80, 90, 100]:
     # Iterate over each line in the file
     i = -1
     for file_path in files_paths:
         i+=1
         try:
-            if file_path[-1:] == "a":
-                gtdatapath=file_path+'.hdf5'
-            
             #create injected video
-            inject_hr.inject_heart_rate(file_path+'.avi', file_path+'_hacked'+str(hr)+'.avi', hr, hue)
+            inject_hr3.inject_heart_rate(file_path+file_ext, file_path+'_hacked___'+str(hr)+file_ext, hr, hue)
             
             if(hr==65):
                 gt,est=eval_data(file_path)
-            gth,esth=eval_data(file_path+'_hacked'+str(hr))
+            gth,esth=eval_data(file_path+'_hacked___'+str(hr))
         except Exception as e:
             print(f"Error with sample: {file_path}\nError: {str(e)}")
+            print("Time: "+str(time.time()-start_time)+"s")
         else:
-            print(file_path,hr,esth)
             if(hr==65):
                 estimations.append([file_path,gt,est,esth])
             else:
                 estimations[i].append(esth)
+            print(file_path,estimations[i][2],hr,esth)
+            print("Time: "+str(time.time()-start_time)+"s")
 
 def find_next_filename(base_filename):
     i = 1
@@ -78,9 +71,9 @@ def write_excel_file():
     sheet.cell(row=1, column=2, value="gt")
     sheet.cell(row=1, column=3, value="est")
     sheet.cell(row=1, column=4, value="est65")
-    sheet.cell(row=1, column=5, value="est90")
-    sheet.cell(row=1, column=6, value="est100")
-    sheet.cell(row=1, column=7, value="est120")
+    sheet.cell(row=1, column=5, value="est80")
+    sheet.cell(row=1, column=6, value="est90")
+    sheet.cell(row=1, column=7, value="est100")
     for i in range(len(estimations)):
         sheet.cell(row=i+2, column=1, value=estimations[i][0])
         sheet.cell(row=i+2, column=2, value=estimations[i][1])
@@ -91,8 +84,6 @@ def write_excel_file():
         sheet.cell(row=i+2, column=7, value=estimations[i][6])
 
     # Save the workbook to a file
-    workbook.save(find_next_filename("output"))
-
-#print(hues)
+    workbook.save(find_next_filename("output_eval_celebdf"))
 
 write_excel_file()
